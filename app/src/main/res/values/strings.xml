@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Geoevent-android</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_geoevents">Geo events</string>
+    <string name="title_geostamps">Geo stamps</string>
+    <string name="title_messages">Messages</string>
+    <string name="make_geostamp">Make geostamp</string>
+</resources>
