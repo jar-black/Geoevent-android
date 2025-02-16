@@ -17,6 +17,16 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="152dp"
+        android:layout_height="55dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="129dp"
+        tools:layout_editor_absoluteY="92dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
