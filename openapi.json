@@ -1,0 +1,531 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GeoEvent API",
+    "version": "1.0.0",
+    "description": "API for GeoEvent application"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.1.175:8081"
+    }
+  ],
+  "paths": {
+    "/auth": {
+      "post": {
+        "summary": "User Authentication",
+        "description": "Authenticate user with phone number and password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": {"type": "string"},
+                  "password": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {"type": "string"}
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization failed"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "Create User",
+        "description": "Create a new user account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "phoneNumber": {"type": "string"},
+                  "name": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get User by ID",
+        "description": "Retrieve user details (only for the authenticated user)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {"type": "string"},
+                    "phoneNumber": {"type": "string"},
+                    "name": {"type": "string"}
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to access resource"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update User",
+        "description": "Update user details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "phoneNumber": {"type": "string"},
+                  "name": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete User",
+        "description": "Delete user account (only for the authenticated user)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "403": {
+            "description": "Not authorized to delete user"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/geoevents": {
+      "get": {
+        "summary": "List GeoEvents",
+        "description": "Retrieve all GeoEvents for the authenticated user",
+        "responses": {
+          "200": {
+            "description": "List of GeoEvents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {"type": "string"},
+                      "userId": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create GeoEvent",
+        "description": "Create a new GeoEvent for the authenticated user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "userId": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "GeoEvent created successfully"
+          }
+        }
+      }
+    },
+    "/geoevents/{id}": {
+      "get": {
+        "summary": "Get GeoEvent by ID",
+        "description": "Retrieve a specific GeoEvent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GeoEvent details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {"type": "string"},
+                    "userId": {"type": "string"}
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "GeoEvent not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete GeoEvent",
+        "description": "Delete a specific GeoEvent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GeoEvent deleted successfully"
+          },
+          "404": {
+            "description": "GeoEvent not found"
+          }
+        }
+      }
+    },
+    "/geostamps": {
+      "get": {
+        "summary": "List GeoStamps",
+        "description": "Retrieve all GeoStamps for the authenticated user",
+        "responses": {
+          "200": {
+            "description": "List of GeoStamps",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {"type": "string"},
+                      "userId": {"type": "string"},
+                      "geoEventId": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create GeoStamp",
+        "description": "Create a new GeoStamp for the authenticated user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "userId": {"type": "string"},
+                  "geoEventId": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "GeoStamp created successfully"
+          }
+        }
+      }
+    },
+    "/geostamps/{id}": {
+      "get": {
+        "summary": "Get GeoStamp by ID",
+        "description": "Retrieve a specific GeoStamp",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GeoStamp details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {"type": "string"},
+                    "userId": {"type": "string"},
+                    "geoEventId": {"type": "string"}
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "GeoStamp not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update GeoStamp Event ID",
+        "description": "Update the GeoEvent ID for a specific GeoStamp",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "geoEventId": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "GeoStamp updated successfully"
+          },
+          "404": {
+            "description": "GeoStamp not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete GeoStamp",
+        "description": "Delete a specific GeoStamp",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GeoStamp deleted successfully"
+          },
+          "404": {
+            "description": "GeoStamp not found"
+          }
+        }
+      }
+    },
+    "/msg": {
+      "get": {
+        "summary": "List Chat Messages",
+        "description": "Retrieve chat messages for a specific event",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Chat Messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {"type": "string"},
+                      "eventId": {"type": "string"},
+                      "content": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Chat Message",
+        "description": "Create a new chat message",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "eventId": {"type": "string"},
+                  "content": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Chat Message created successfully"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Chat Message",
+        "description": "Update an existing chat message",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "eventId": {"type": "string"},
+                  "content": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chat Message updated successfully"
+          },
+          "404": {
+            "description": "Chat Message not found"
+          }
+        }
+      }
+    },
+    "/msg/{id}": {
+      "delete": {
+        "summary": "Delete Chat Message",
+        "description": "Delete a specific chat message",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chat Message deleted successfully"
+          },
+          "404": {
+            "description": "Chat Message not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
