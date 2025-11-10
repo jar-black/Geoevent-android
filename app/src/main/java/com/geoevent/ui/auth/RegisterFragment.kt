@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.geoevent.MainActivity
 import com.geoevent.databinding.FragmentRegisterBinding
-import java.util.UUID
 
 class RegisterFragment : Fragment() {
 
@@ -69,8 +68,7 @@ class RegisterFragment : Fragment() {
             val password = binding.editPassword.text.toString().trim()
 
             if (validateInputs(name, phoneNumber, password)) {
-                val userId = UUID.randomUUID().toString()
-                viewModel.register(userId, phoneNumber, name, password)
+                viewModel.register(name, phoneNumber, password)
             }
         }
 
