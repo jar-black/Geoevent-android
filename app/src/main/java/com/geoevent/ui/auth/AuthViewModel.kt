@@ -8,14 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.geoevent.data.api.RetrofitClient
 import com.geoevent.data.auth.SessionManager
 import com.geoevent.data.repository.AuthRepository
+import com.geoevent.data.repository.UserRepository
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sessionManager = SessionManager(application)
     private val authRepository = AuthRepository(
         RetrofitClient.getAuthService(sessionManager)
+    )
+    private val userRepository = UserRepository(
+        RetrofitClient.getUserService(sessionManager)
     )
 
     private val _loginState = MutableLiveData<AuthState>()
@@ -33,7 +36,19 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
                 if (response.isSuccessful && response.body() != null) {
                     val token = response.body()!!.token
+                    // Save token (this automatically extracts and saves user ID from JWT)
                     sessionManager.saveAuthToken(token)
+
+                    // Fetch user details to save name and phone number
+                    val userId = sessionManager.getUserId()
+                    if (userId != null) {
+                        val userResponse = userRepository.getUser(userId)
+                        if (userResponse.isSuccessful && userResponse.body() != null) {
+                            val user = userResponse.body()!!
+                            sessionManager.saveUserInfo(user.name, user.phoneNumber)
+                        }
+                    }
+
                     _loginState.value = AuthState.Success
                 } else {
                     _loginState.value = AuthState.Error("Login failed: ${response.code()}")
@@ -44,7 +59,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun register(userId: String, phoneNumber: String, name: String, password: String) {
+    fun register(name: String, phoneNumber: String, password: String) {
         viewModelScope.launch {
             try {
                 _registerState.value = AuthState.Loading
@@ -58,8 +73,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
                     if (loginResponse.isSuccessful && loginResponse.body() != null) {
                         val token = loginResponse.body()!!.token
+                        // Save token (this automatically extracts and saves user ID from JWT)
                         sessionManager.saveAuthToken(token)
-                        sessionManager.saveUserInfo(userId, name, phoneNumber)
+                        // Save additional user info
+                        sessionManager.saveUserInfo(name, phoneNumber)
                         _registerState.value = AuthState.Success
                     } else {
                         _registerState.value = AuthState.Error("Registration successful but login failed")
