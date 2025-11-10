@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.geoevent.data.api.RetrofitClient
 import com.geoevent.data.auth.SessionManager
-import com.geoevent.data.model.User
 import com.geoevent.data.repository.AuthRepository
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -49,9 +49,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 _registerState.value = AuthState.Loading
 
-                // Create user
-                val user = User(id = userId, phoneNumber = phoneNumber, name = name)
-                val registerResponse = authRepository.register(user)
+                // Register user with new structure (name, phoneNumber, password)
+                val registerResponse = authRepository.register(name, phoneNumber, password)
 
                 if (registerResponse.isSuccessful) {
                     // Auto-login after registration
